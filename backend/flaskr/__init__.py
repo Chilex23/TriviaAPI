@@ -210,13 +210,13 @@ def create_app(test_config=None):
             questions = Question.query.filter(
                 Question.category == category['id'],
                 Question.id.notin_(previous_questions)).all()
-
+        # No more questions return none to end the game
         if len(questions) < 1:
             return jsonify({
                 "success": True,
                 "question": None
             })
-
+    
         question = random.choice(questions).format()
 
         return jsonify({
