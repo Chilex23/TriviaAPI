@@ -125,33 +125,39 @@ def create_app(test_config=None):
         if body == None:
             abort(400)
 
-        for key in ['question', 'answer', 'difficulty', 'category']:
-            if key not in body.keys() or body[key] == None or body[key] == '':
-                abort(422)
+        #get the json value if search term is in the json body
+        if 'searchTerm' in body.keys():
+            searchTerm = body.get('searchTerm', None)
+            if searchTerm:
+                selection = Question.query.filter(Question.question.ilike(f'%{searchTerm}%')).all()
+                current_questions = paginate_questions(request, selection)
+                if len(current_questions) < 1:
+                    abort(404)
+                return jsonify({
+                    "success": True,
+                    "questions": current_questions,
+                    "total_questions": len(selection),
+                    "current_category": None
+                })
+            else:
+                abort(400)
+        else:
+            for key in ['question', 'answer', 'difficulty', 'category']:
+                if key not in body.keys() or body[key] == None or body[key] == '':
+                    abort(422)
 
-        question = Question(
-            question=body['question'],
-            answer=body['answer'],
-            difficulty=body['difficulty'],
-            category=body['category'],
-        )
-        question.insert()
+            question = Question(
+                question=body['question'],
+                answer=body['answer'],
+                difficulty=body['difficulty'],
+                category=body['category'],
+            )
+            question.insert()
 
-        return jsonify({
-            "success": True,
-            "created": question.format()
-        })
-
-    """
-    @TODO:
-    Create a POST endpoint to get questions based on a search term.
-    It should return any questions for whom the search term
-    is a substring of the question.
-
-    TEST: Search by any phrase. The questions list will update to include
-    only question that include that string within their question.
-    Try using the word "title" to start.
-    """
+            return jsonify({
+                "success": True,
+                "created": question.format()
+            })
 
     """
     @TODO:
@@ -190,6 +196,33 @@ def create_app(test_config=None):
     one question at a time is displayed, the user is allowed to answer
     and shown whether they were correct or not.
     """
+    @app.route("/quizzes", methods=["POST"])
+    def get_question_for_quiz():
+        body = request.get_json()
+        previous_questions = body.get('previous_questions', None)
+        category = body.get('quiz_category', None)
+        if category == None:
+            abort(400)
+
+        if category['id'] == 0:
+            questions = Question.query.filter(Question.id.notin_(previous_questions)).all()
+        else:
+            questions = Question.query.filter(
+                Question.category == category['id'],
+                Question.id.notin_(previous_questions)).all()
+
+        if len(questions) < 1:
+            return jsonify({
+                "success": True,
+                "question": None
+            })
+
+        question = random.choice(questions).format()
+
+        return jsonify({
+            "success": True,
+            "question": question
+        })
 
     """
     @TODO:
@@ -220,6 +253,13 @@ def create_app(test_config=None):
         return (
             jsonify({"success": False, "error": 405, "message": "method not allowed"}),
             405,
+        )
+
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        return (
+            jsonify({"success": False, "error": 500, "message": "internal server error"}),
+            500,
         )
 
     return app

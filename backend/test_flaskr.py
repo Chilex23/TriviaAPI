@@ -28,6 +28,10 @@ class TriviaTestCase(unittest.TestCase):
             "category": 4
         }
 
+        self.search_term = {
+            "searchTerm": "title"
+        }
+
         # binds the app to the current context
         with self.app.app_context():
             self.db = SQLAlchemy()
@@ -214,6 +218,68 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'unprocessable')
     
 
+    def test_search_for_questions_success(self):
+        response = self.client().post('/questions', json=self.search_term)
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['questions'])
+        self.assertTrue(data['total_questions'])
+        self.assertEqual(data['current_category'], None)
+
+    def test_search_for_questions_bad_query_error(self):
+        search_term = {
+            "searchTerm": ""
+        }
+
+        response = self.client().post('/questions', json=search_term)
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'bad request')
+
+    def test_search_for_question_no_questions_found_error(self):
+        search_term = {
+            "searchTerm": "&"
+        }
+
+        response = self.client().post('/questions', json=search_term)
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'resource not found')
+    
+    def test_get_question_for_quiz_success(self):
+        res = self.client().post("/quizzes", json={
+            "previous_questions": [],
+            "quiz_category": {"type": "History", "id": 4}
+        })
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue(data["question"])
+
+    def test_get_question_for_quiz_when_no_more_questions(self):
+        res = self.client().post("/quizzes", json={
+            "previous_questions": [5, 9, 12, 23],
+            "quiz_category": {"type": "History", "id": 4}
+        })
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertIsNone(data["question"])
+
+    def test_get_question_for_quiz_bad_request(self):
+        res = self.client().post("/quizzes", json={})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(data["error"], 400)
 
 
 # Make the tests conveniently executable
