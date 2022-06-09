@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
+import { Link } from "react-router-dom";
 import '../stylesheets/QuizView.css';
 
 const questionsPerPlay = 5;
@@ -16,6 +17,7 @@ class QuizView extends Component {
       currentQuestion: {},
       guess: '',
       forceEnd: false,
+      playerName: '',
     };
   }
 
@@ -68,8 +70,9 @@ class QuizView extends Component {
           currentQuestion: result.question,
           guess: '',
           forceEnd: result.question ? false : true,
+        }, () => {
+          if (this.state.forceEnd) this.submitToLeaderBoard();
         });
-        return;
       },
       error: (error) => {
         alert('Unable to load question. Please try your request again');
@@ -77,6 +80,39 @@ class QuizView extends Component {
       },
     });
   };
+
+  submitToLeaderBoard = () => {
+    $.ajax({
+      url: '/leaderboard', //TODO: update request URL
+      type: 'POST',
+      dataType: 'json',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        name: this.state.playerName,
+        score: this.state.numCorrect,
+      }),
+      xhrFields: {
+        withCredentials: true,
+      },
+      crossDomain: true,
+      success: (result) => {
+        this.setState({
+          numCorrect: 0,
+          playerName: '',
+        });
+        return;
+      },
+      error: (error) => {
+        alert('Unable to submit score. Please try your request again');
+        return;
+      }
+    });
+  }
+
+  submitPlayerName = (event) => {
+    const name = document.getElementById('player-name').value;
+    this.setState({ playerName: name });
+  }
 
   submitGuess = (event) => {
     event.preventDefault();
@@ -100,9 +136,9 @@ class QuizView extends Component {
   };
 
   renderPrePlay() {
-    return (
-      <div className='quiz-play-holder'>
-        <div className='choose-header'>Choose Category</div>
+    return ( 
+    <div className='quiz-play-holder'>
+        {this.state.playerName ? (<> <div className='choose-header'>Choose Category</div>
         <div className='category-holder'>
           <div className='play-category' onClick={this.selectCategory}>
             ALL
@@ -119,9 +155,17 @@ class QuizView extends Component {
               </div>
             );
           })}
-        </div>
+        </div> </>) : (
+          <div className='player-name-holder'>
+            <div className='player-name-header'>Enter your name to play</div>
+            <div className='player-name-input'>
+              <input id='player-name' type='text' name='playerName' />
+              <button onClick={this.submitPlayerName}>Submit</button>
+            </div>
+          </div>
+        )}
       </div>
-    );
+      ) 
   }
 
   renderFinalScore() {
@@ -129,6 +173,11 @@ class QuizView extends Component {
       <div className='quiz-play-holder'>
         <div className='final-header'>
           Your Final Score is {this.state.numCorrect}
+          <p>
+						<Link to="leaderboard">
+							See where you rank in the leaderboard.{" "}
+						</Link>{" "}
+					</p>
         </div>
         <div className='play-again button' onClick={this.restartGame}>
           Play Again?
