@@ -274,12 +274,13 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data["success"], True)
         self.assertIsNone(data["question"])
 
-    def test_get_question_for_quiz_bad_request(self):
+    def test_get_question_for_quiz_bad_request_error(self):
         res = self.client().post("/quizzes", json={})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 400)
         self.assertEqual(data["error"], 400)
+        self.assertEqual(data['message'], 'bad request')
 
 
 # Make the tests conveniently executable

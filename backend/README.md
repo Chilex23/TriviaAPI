@@ -1,72 +1,292 @@
-# Backend - Trivia API
+# Backend - Trivia Game API
 
-## Setting up the Backend
+## Introduction
+This API allows any frontend application to run a trivia game based on the questions provided.
 
-### Install Dependencies
+## Getting Started
+This API is not deployed yet. You will have to run it locally by using the steps provided in this [README.md file](./Readme.md). <br/>
+**BASE URL**: `http://localhost:5000`
 
-1. **Python 3.7** - Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
+### Error Handling
+Errors are returned as JSON objects in the following format:
+```
+{
+    "success": False, 
+    "error": 400,
+    "message": "bad request"
+}
+```
+The API will return three error types when requests fail:
+- 400: bad request
+- 404: resource not found
+- 405: method not allowed
+- 422: unprocessable
+- 500: internal server error
 
-2. **Virtual Environment** - We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organized. Instructions for setting up a virual environment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
+### Endpoints 
+The API has the following endpoints:
+### Categories
+- `GET /categories`: returns a list of all categories
 
-3. **PIP Dependencies** - Once your virtual environment is setup and running, install the required dependencies by navigating to the `/backend` directory and running:
+#### Query Parameters
+This endpoint takes no query parameters.
 
-```bash
-pip install -r requirements.txt
+#### Request Body
+This endpoint takes no request body.
+
+#### Sample Request
+`curl http://localhost:5000/categories`
+
+#### Sample Response
+```
+{
+  "categories": [
+    {
+      "id": 1,
+      "type": "Science"
+    },
+    {
+      "id": 2,
+      "type": "Art"
+    },
+    {
+      "id": 3,
+      "type": "Geography"
+    },
+    {
+      "id": 4,
+      "type": "History"
+    },
+    {
+      "id": 5,
+      "type": "Entertainment"
+    },
+    {
+      "id": 6,
+      "type": "Sports"
+    }
+  ],
+  "success": true,
+  "total_categories": 6
+}
 ```
 
-#### Key Pip Dependencies
+### `GET /categories/{category_id}/questions`
+This returns a list of questions for a given category.
 
-- [Flask](http://flask.pocoo.org/) is a lightweight backend microservices framework. Flask is required to handle requests and responses.
+#### Query Parameters
+This endpoint takes no query parameters.
 
-- [SQLAlchemy](https://www.sqlalchemy.org/) is the Python SQL toolkit and ORM we'll use to handle the lightweight SQL database. You'll primarily work in `app.py`and can reference `models.py`.
+#### Request Body
+This endpoint takes no request body.
 
-- [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/#) is the extension we'll use to handle cross-origin requests from our frontend server.
+#### Sample Request
+`curl http://localhost:5000/categories/1/questions`
 
-### Set up the Database
-
-With Postgres running, create a `trivia` database:
-
-```bash
-createdb trivia
+#### Sample Response
+-`questions`: array - All questions within the specified category. <br>
+-`totalQuestions`: int - Total number of questions within specified category. <br> 
+```
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the capital of France?",
+      "answer": "Paris",
+      "category": "Geography",
+      "difficulty": "easy"
+    },
+    {
+      "id": 2,
+      "question": "What is the capital of Germany?",
+      "answer": "Berlin",
+      "category": "Geography",
+      "difficulty": "easy"
+    },
+    {
+      "id": 3,
+      "question": "What is the capital of Italy?",
+      "answer": "Rome",
+      "category": "Geography",
+      "difficulty": "easy"
+    }
+  ]
+  "success": true,
+  "total_questions": 3
+}
 ```
 
-Populate the database using the `trivia.psql` file provided. From the `backend` folder in terminal run:
+### Questions
 
-```bash
-psql trivia < trivia.psql
+### `GET /questions`
+This returns a paginated list of questions. Each page contains 10 questions.
+
+#### Query Parameters
+- `page`: int - The page number to return.
+
+#### Request Body
+This endpoint takes no request body.
+
+#### Sample Request
+`curl http://localhost:5000/questions?page=1`
+
+#### Sample Response
+`questions`: array - Fetched questions. <br>
+`totalQuestions`: int - Total number of questions in the database. <br>
+
+```
+{
+  "questions": [
+    {
+      "answer": "Brazil",
+      "category": 6,
+      "difficulty": 3,
+      "id": 10,
+      "question": "Which is the only team to play in every soccer World Cup tournament?"
+    }, {
+      "answer": "Uruguay",
+      "category": 6,
+      "difficulty": 4,
+      "id": 11,
+      "question": "Which country won the first ever soccer World Cup in 1930?"
+    }
+  ],
+  "categories" : {
+    "1": "Science",
+    "2", "Art",
+    "3": "History"
+   },
+  "totalQuestions": 2
+}
 ```
 
-### Run the Server
+### `POST /questions`
+This endpoint allows you to add a new question to the database. It requires the following:
+- `question`: string - The question text.
+- `answer`: string - The correct answer.
+- `category`: int - The category id.
+- `difficulty`: string - The difficulty level of the question.
 
-From within the `./src` directory first ensure you are working using your created virtual environment.
+#### Query Parameters
+This endpoint takes no query parameters.
 
-To run the server, execute:
-
-```bash
-flask run --reload
+#### Request Body
+This endpoint takes the following request body:
+```
+{
+  "question": "What is the capital of France?",
+  "answer": "Paris",
+  "category": "Geography",
+  "difficulty": "easy"
+}
 ```
 
-The `--reload` flag will detect file changes and restart the server automatically.
+#### Sample Request
+`curl -X POST -H "Content-Type: application/json" -d '{"question": "What is the capital of France?", "answer": "Paris", "category": "Geography", "difficulty": "easy"}' http://localhost:5000/questions`
 
-## To Do Tasks
+#### Sample Response
+```
+{
+  "success": true,
+  "message": "Question added successfully"
+}
+```
 
-These are the files you'd want to edit in the backend:
+### `POST /questions` (Search)
+This endpoint allows you to search for questions based on a search term which is case insensitive. It requires the following:
+- `searchTerm`: string - The search term.
 
-1. `backend/flaskr/__init__.py`
-2. `backend/test_flaskr.py`
+#### Query Parameters
+This endpoint takes no query parameters.
 
-One note before you delve into your tasks: for each endpoint, you are expected to define the endpoint and response data. The frontend will be a plentiful resource because it is set up to expect certain endpoints and response data formats already. You should feel free to specify endpoints in your own way; if you do so, make sure to update the frontend or you will get some unexpected behavior.
+#### Request Body
+This endpoint takes the following request body:
+```
+{
+  "searchTerm": "What is the capital of France?"
+}
+```
+#### Sample Request
+`curl -X POST -H "Content-Type: application/json" -d '{"searchTerm": "What is the capital of France?"}' http://localhost:5000/questions`
 
-1. Use Flask-CORS to enable cross-domain requests and set response headers.
-2. Create an endpoint to handle `GET` requests for questions, including pagination (every 10 questions). This endpoint should return a list of questions, number of total questions, current category, categories.
-3. Create an endpoint to handle `GET` requests for all available categories.
-4. Create an endpoint to `DELETE` a question using a question `ID`.
-5. Create an endpoint to `POST` a new question, which will require the question and answer text, category, and difficulty score.
-6. Create a `POST` endpoint to get questions based on category.
-7. Create a `POST` endpoint to get questions based on a search term. It should return any questions for whom the search term is a substring of the question.
-8. Create a `POST` endpoint to get questions to play the quiz. This endpoint should take a category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions.
-9. Create error handlers for all expected errors including 400, 404, 422, and 500.
+#### Sample Response
+```
+{
+  "questions": [
+    {
+      "answer": "Paris",
+      "category": "Geography",
+      "difficulty": "easy",
+      "id": 1,
+      "question": "What is the capital of France?"
+    }
+  ]
+  "success": true,
+  "total_questions": 1
+  "current_Category": "Geography"
+}
+```
 
+### `DELETE /questions/{question_id}`
+This endpoint allows you to delete a question from the database. It requires the following:
+- `question_id`: int - The id of the question to delete.
+
+#### Query Parameters
+This endpoint takes no query parameters.
+
+#### Request Body
+This endpoint takes no request body.
+
+#### Sample Request
+`curl -X DELETE -H "Content-Type: application/json" http://localhost:5000/questions/1`
+
+#### Sample Response
+```
+{
+  "success": true,
+  "message": "Question deleted successfully"
+}
+```
+
+### Quizzes
+
+### `POST /quizzes`
+This returns a random question from the database within a specified category or from a random category if none is specified. It accepts an array of previous questions to ensure that a question that has been chosen before is not chosen again. If there are no other questions to left, it returns null.
+
+#### Query Parameters
+This endpoint takes no query parameters.
+
+#### Request Body
+This endpoint takes the following request body:
+`previous_questions`: array <small> (required) </small> - Contains ids of previously chosen questions. <br>
+`quiz_category`: int <small> (optional) </small> - Current category. <br>
+```
+{
+  "previousQuestions": [
+    1,
+    2,
+    3
+  ]
+}
+```
+
+#### Sample Request
+`curl -X POST -H "Content-Type: application/json" -d '{"previousQuestions": [1, 2, 3], "quiz_category": 1}' http://localhost:5000/quizzes`
+
+#### Sample Response
+`question`: object|null - randomly chosen question. <br>
+```
+{
+  "question": {
+    "category": "Geography",
+    "correct_answer": "Paris",
+    "difficulty": "easy",
+    "id": 1,
+    "question": "What is the capital of France?"
+  },
+  "success": true
+}
+```
 ## Documenting your Endpoints
 
 You will need to provide detailed documentation of your API endpoints including the URL, request parameters, and the response body. Use the example below as a reference.
