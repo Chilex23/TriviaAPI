@@ -203,7 +203,7 @@ def create_app(test_config=None):
         category = body.get('quiz_category', None)
         if category == None:
             abort(400)
-
+            
         if category['id'] == 0:
             questions = Question.query.filter(Question.id.notin_(previous_questions)).all()
         else:

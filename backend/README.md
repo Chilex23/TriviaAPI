@@ -260,20 +260,23 @@ This endpoint takes no query parameters.
 #### Request Body
 This endpoint takes the following request body:
 `previous_questions`: array <small> (required) </small> - Contains ids of previously chosen questions. <br>
-`quiz_category`: int <small> (optional) </small> - Current category. <br>
+`quiz_category`: object <small> (optional) </small> - Current category. <br>
 ```
 {
-  "previous-questions": [
+  "previous_questions": [
     1,
     2,
     3
   ],
-  "quiz_category": 1
+  "quiz_category": {
+    "id": 3,
+    "type": "History"
+  }
 }
 ```
 
 #### Sample Request
-`curl -X POST -H "Content-Type: application/json" -d '{"previous_questions": [1, 2, 3], "quiz_category": 1}' http://localhost:5000/quizzes`
+`curl -X POST -H "Content-Type: application/json" -d '{"previous_questions": [1, 2, 3], "quiz_category": '{"id":3, "type": "History"}'}' http://localhost:5000/quizzes`
 
 #### Sample Response
 `question`: object|null - randomly chosen question. <br>
