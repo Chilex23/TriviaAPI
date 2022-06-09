@@ -229,11 +229,11 @@ This endpoint takes the following request body:
 ```
 
 ### `DELETE /questions/{question_id}`
-This endpoint allows you to delete a question from the database. It requires the following:
-- `question_id`: int - The id of the question to delete.
+This endpoint allows you to delete a question from the database.
 
 #### Query Parameters
-This endpoint takes no query parameters.
+This endpoint takes the following query parameter:
+- `question_id`: int - The id of the question to delete.
 
 #### Request Body
 This endpoint takes no request body.
