@@ -45,3 +45,33 @@ div.button {
 .wrong {
     color: red;
 }
+
+.player-name-holder {
+    margin-top: 20px;
+    font-size: 24px;
+    border: 2px solid black;
+    padding: 20px;
+}
+
+.player-name-input {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+#player-name {
+    outline: none;
+    height: 30px;
+    font-size: 16px;
+}
+
+.player-btn {
+    text-transform: uppercase;
+    width: 100px;
+    border: none;
+    background-color: dodgerblue;
+    color: white;
+    padding: 3px 5px;
+    cursor: pointer;
+}

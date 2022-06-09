@@ -160,7 +160,7 @@ class QuizView extends Component {
             <div className='player-name-header'>Enter your name to play</div>
             <div className='player-name-input'>
               <input id='player-name' type='text' name='playerName' />
-              <button onClick={this.submitPlayerName}>Submit</button>
+              <button className='player-btn' onClick={this.submitPlayerName}>Submit</button>
             </div>
           </div>
         )}

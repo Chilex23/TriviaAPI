@@ -227,13 +227,13 @@ def create_app(test_config=None):
 
     @app.route("/leaderboard")
     def get_leaderboard_scores():
-        ''' Endpoint to get leaderboard scores '''
+        ''' Endpoint to get leaderboard scores, the top 10 scores'''
 
-        results = Leaderboard.query.order_by(desc(Leaderboard.score)).all()
-        paginated_results = paginate_questions(request, results)
+        scores = Leaderboard.query.order_by(desc(Leaderboard.score)).all()
+        paginated_scores = paginate_questions(request, scores)
         return jsonify({
-            "results": paginated_results,
-            "totalResults": len(results)
+            "results": paginated_scores,
+            "totalResults": len(scores)
         })
 
     @app.route("/leaderboard", methods=["POST"])
@@ -242,11 +242,11 @@ def create_app(test_config=None):
             player = request.get_json()["name"]
             score = int(request.get_json()["score"])
 
-            board_item = Leaderboard(player=player, score=score)
-            board_item.insert()
+            player_score_item = Leaderboard(player=player, score=score)
+            player_score_item.insert()
 
             return jsonify({
-                "added": board_item.id,
+                "added": player_score_item.id,
                 "success": True
             })
         except Exception:

@@ -5,7 +5,7 @@ from flask import request
 from flask_sqlalchemy import SQLAlchemy
 
 from flaskr import create_app
-from models import setup_db, Question, Category
+from models import setup_db, Question, Category, Leaderboard
 
 
 class TriviaTestCase(unittest.TestCase):
@@ -74,7 +74,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
         self.assertTrue(len(data['categories']))
         self.assertTrue(data['total_categories'])
-
+   
     def test_get_questions_based_on_category_success(self):
         category_id = 1
         res = self.client().get(f'/categories/{category_id}/questions')
@@ -281,7 +281,32 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 400)
         self.assertEqual(data["error"], 400)
         self.assertEqual(data['message'], 'bad request')
+    
+    def test_get_leadboard_success(self):
+        res = self.client().get("/leaderboard")
+        data = json.loads(res.data)
 
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(data["results"])
+
+    def test_post_to_leaderboard_success(self):
+        res = self.client().post("/leaderboard", json={
+            "name": "Test",
+            "score": 12
+        })
+        data = json.loads(res.data)
+
+        player_score = Leaderboard.query.get(data["added"])
+        self.assertEqual(res.status_code, 200)
+        self.assertIsNotNone(player_score)
+    
+    def test_post_to_leaderboard_error(self):
+        res = self.client().post("/leaderboard", json={})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(data["success"], False)
+        self.assertEqual(data["message"], 'bad request')
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
