@@ -263,16 +263,17 @@ This endpoint takes the following request body:
 `quiz_category`: int <small> (optional) </small> - Current category. <br>
 ```
 {
-  "previousQuestions": [
+  "previous-questions": [
     1,
     2,
     3
-  ]
+  ],
+  "quiz_category": 1
 }
 ```
 
 #### Sample Request
-`curl -X POST -H "Content-Type: application/json" -d '{"previousQuestions": [1, 2, 3], "quiz_category": 1}' http://localhost:5000/quizzes`
+`curl -X POST -H "Content-Type: application/json" -d '{"previous_questions": [1, 2, 3], "quiz_category": 1}' http://localhost:5000/quizzes`
 
 #### Sample Response
 `question`: object|null - randomly chosen question. <br>
