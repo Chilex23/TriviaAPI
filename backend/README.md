@@ -85,8 +85,8 @@ This endpoint takes no request body.
 `curl http://localhost:5000/categories/1/questions`
 
 #### Sample Response
--`questions`: array - All questions within the specified category. <br>
--`totalQuestions`: int - Total number of questions within specified category. <br> 
+- `questions`: array - All questions within the specified category. <br>
+- `totalQuestions`: int - Total number of questions within specified category. <br> 
 ```
 {
   "questions": [
@@ -132,8 +132,8 @@ This endpoint takes no request body.
 `curl http://localhost:5000/questions?page=1`
 
 #### Sample Response
-`questions`: array - Fetched questions. <br>
-`totalQuestions`: int - Total number of questions in the database. <br>
+- `questions`: array - Fetched questions. <br>
+- `totalQuestions`: int - Total number of questions in the database. <br>
 
 ```
 {
@@ -259,8 +259,8 @@ This endpoint takes no query parameters.
 
 #### Request Body
 This endpoint takes the following request body:
-`previous_questions`: array <small> (required) </small> - Contains ids of previously chosen questions. <br>
-`quiz_category`: object <small> (optional) </small> - Current category. <br>
+- `previous_questions`: array <small> (required) </small> - Contains ids of previously chosen questions. <br>
+- `quiz_category`: object <small> (optional) </small> - Current category. <br>
 ```
 {
   "previous_questions": [
