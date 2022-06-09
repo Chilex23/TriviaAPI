@@ -75,7 +75,8 @@ This endpoint takes no request body.
 This returns a list of questions for a given category.
 
 #### Query Parameters
-This endpoint takes no query parameters.
+This endpoint takes the following query parameters:
+- `category_id`: the id of the category
 
 #### Request Body
 This endpoint takes no request body.
@@ -286,39 +287,4 @@ This endpoint takes the following request body:
   },
   "success": true
 }
-```
-## Documenting your Endpoints
-
-You will need to provide detailed documentation of your API endpoints including the URL, request parameters, and the response body. Use the example below as a reference.
-
-### Documentation Example
-
-`GET '/api/v1.0/categories'`
-
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, `categories`, that contains an object of `id: category_string` key: value pairs.
-
-```json
-{
-  "1": "Science",
-  "2": "Art",
-  "3": "Geography",
-  "4": "History",
-  "5": "Entertainment",
-  "6": "Sports"
-}
-```
-
-## Testing
-
-Write at least one test for the success and at least one error behavior of each endpoint using the unittest library.
-
-To deploy the tests, run
-
-```bash
-dropdb trivia_test
-createdb trivia_test
-psql trivia_test < trivia.psql
-python test_flaskr.py
 ```
