@@ -306,7 +306,6 @@ class TriviaTestCase(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
-        self.assertTrue(data["results"])
 
     def test_post_to_leaderboard_error(self):
         res = self.client().post("/leaderboard", json={})
