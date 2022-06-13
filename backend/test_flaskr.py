@@ -1,11 +1,14 @@
 import os
 import unittest
 import json
+from dotenv import load_dotenv
 from flask import request
 from flask_sqlalchemy import SQLAlchemy
 
 from flaskr import create_app
 from models import setup_db, Question, Category, Leaderboard
+
+load_dotenv()
 
 
 class TriviaTestCase(unittest.TestCase):
@@ -15,10 +18,16 @@ class TriviaTestCase(unittest.TestCase):
         """Define test variables and initialize app."""
         self.app = create_app()
         self.client = self.app.test_client
-        self.database_name = "trivia_test"
+        self.database_name = os.getenv('DB_TEST_NAME')
+        self.database_user = os.getenv('DB_USER')
+        self.database_password = os.getenv('DB_PASSWORD')
+        self.database_path = os.getenv('DB_HOST')
+
         self.database_path = "postgresql://{}:{}@{}/{}".format(
-            "postgres", "snowwhite01", "localhost:5432", self.database_name
-        )
+            self.database_user,
+            self.database_password,
+            self.database_path,
+            self.database_name)
         setup_db(self.app, self.database_path)
 
         self.new_question = {
@@ -38,15 +47,11 @@ class TriviaTestCase(unittest.TestCase):
             self.db.init_app(self.app)
             # create all tables
             self.db.create_all()
-    
+
     def tearDown(self):
         """Executed after reach test"""
         pass
 
-    """
-    TODO
-    Write at least one test for each test for successful operation and for expected errors.
-    """
     def test_get_paginated_questions_success(self):
         res = self.client().get("/questions")
         data = json.loads(res.data)
@@ -74,7 +79,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
         self.assertTrue(len(data['categories']))
         self.assertTrue(data['total_categories'])
-   
+
     def test_get_questions_based_on_category_success(self):
         category_id = 1
         res = self.client().get(f'/categories/{category_id}/questions')
@@ -95,9 +100,11 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'resource not found')
 
-    def test_get_questions_for_category_question_page_exist_beyond_valid_range_error(self):
+    def test_get_questions_for_category_pagination_exist_beyond_valid_range(
+            self):
         category_id = 1
-        response = self.client().get(f'/categories/{category_id}/questions?page=10000')
+        response = self.client().get(
+            f'/categories/{category_id}/questions?page=10000')
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 404)
@@ -138,9 +145,11 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['created']['id'], new_question.id)
         self.assertEqual(data['created']['question'], new_question.question)
         self.assertEqual(data['created']['answer'], new_question.answer)
-        self.assertEqual(data['created']['difficulty'], new_question.difficulty)
+        self.assertEqual(
+            data['created']['difficulty'],
+            new_question.difficulty)
         self.assertEqual(data['created']['category'], new_question.category)
-    
+
     def test_create_question_bad_body_error(self):
         request = None
 
@@ -150,7 +159,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'bad request')
-    
+
     def test_create_question_question_is_missing_error(self):
         request = self.new_question.copy()
         del request["question"]
@@ -216,7 +225,6 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 422)
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'unprocessable')
-    
 
     def test_search_for_questions_success(self):
         response = self.client().post('/questions', json=self.search_term)
@@ -251,7 +259,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'resource not found')
-    
+
     def test_get_question_for_quiz_success(self):
         res = self.client().post("/quizzes", json={
             "previous_questions": [],
@@ -281,13 +289,6 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 400)
         self.assertEqual(data["error"], 400)
         self.assertEqual(data['message'], 'bad request')
-    
-    def test_get_leadboard_success(self):
-        res = self.client().get("/leaderboard")
-        data = json.loads(res.data)
-
-        self.assertEqual(res.status_code, 200)
-        self.assertTrue(data["results"])
 
     def test_post_to_leaderboard_success(self):
         res = self.client().post("/leaderboard", json={
@@ -299,7 +300,14 @@ class TriviaTestCase(unittest.TestCase):
         player_score = Leaderboard.query.get(data["added"])
         self.assertEqual(res.status_code, 200)
         self.assertIsNotNone(player_score)
-    
+
+    def test_get_leadboard_success(self):
+        res = self.client().get("/leaderboard")
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(data["results"])
+
     def test_post_to_leaderboard_error(self):
         res = self.client().post("/leaderboard", json={})
         data = json.loads(res.data)
@@ -307,6 +315,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 400)
         self.assertEqual(data["success"], False)
         self.assertEqual(data["message"], 'bad request')
+
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
