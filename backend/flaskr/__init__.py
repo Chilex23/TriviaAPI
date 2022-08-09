@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, abort, jsonify
+from flask import Flask, request, abort, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 from flask_cors import CORS
@@ -23,7 +23,7 @@ def paginate_questions(request, selection):
 
 def create_app(test_config=None):
     # create and configure the app
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='../frontend/build', static_url_path='')
     setup_db(app)
 
     cors = CORS(app, resources={r"/*": {"origin": "*"}})
@@ -196,6 +196,10 @@ def create_app(test_config=None):
             })
         except Exception:
             abort(400)
+
+    @app.route("/")
+    def serve():
+        return send_from_directory(app.static_folder, 'index.html')
 
     """
     @TODO:
