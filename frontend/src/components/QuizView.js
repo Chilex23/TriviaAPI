@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import { Link } from "react-router-dom";
 import '../stylesheets/QuizView.css';
+import { Bars } from  'react-loader-spinner';
 
 const questionsPerPlay = 5;
 
@@ -18,12 +19,13 @@ class QuizView extends Component {
       guess: '',
       forceEnd: false,
       playerName: '',
+      loading: true,
     };
   }
 
   componentDidMount() {
     $.ajax({
-      url: `/categories`, //TODO: update request URL
+      url: `https://general-trivia-api.herokuapp.com/categories`, //TODO: update request URL
       type: 'GET',
       success: (result) => {
         this.setState({ categories: result.categories });
@@ -51,7 +53,7 @@ class QuizView extends Component {
     }
 
     $.ajax({
-      url: '/quizzes', //TODO: update request URL
+      url: 'https://general-trivia-api.herokuapp.com/quizzes', //TODO: update request URL
       type: 'POST',
       dataType: 'json',
       contentType: 'application/json',
@@ -59,9 +61,6 @@ class QuizView extends Component {
         previous_questions: previousQuestions,
         quiz_category: this.state.quizCategory,
       }),
-      xhrFields: {
-        withCredentials: true,
-      },
       crossDomain: true,
       success: (result) => {
         this.setState({
@@ -70,6 +69,7 @@ class QuizView extends Component {
           currentQuestion: result.question,
           guess: '',
           forceEnd: result.question ? false : true,
+          loading: false,
         }, () => {
           if (this.state.forceEnd) this.submitToLeaderBoard();
         });
@@ -83,7 +83,7 @@ class QuizView extends Component {
 
   submitToLeaderBoard = () => {
     $.ajax({
-      url: '/leaderboard', //TODO: update request URL
+      url: 'https://general-trivia-api.herokuapp.com/leaderboard', //TODO: update request URL
       type: 'POST',
       dataType: 'json',
       contentType: 'application/json',
@@ -91,13 +91,9 @@ class QuizView extends Component {
         name: this.state.playerName,
         score: this.state.numCorrect,
       }),
-      xhrFields: {
-        withCredentials: true,
-      },
       crossDomain: true,
       success: (result) => {
         this.setState({
-          numCorrect: 0,
           playerName: '',
         });
         return;
@@ -222,7 +218,7 @@ class QuizView extends Component {
       this.renderFinalScore()
     ) : this.state.showAnswer ? (
       this.renderCorrectAnswer()
-    ) : (
+    ) : this.state.loading ? <div className='flex-center'><Bars color="#00BFFF" height={80} width={80} /></div> : (
       <div className='quiz-play-holder'>
         <div className='quiz-question'>
           {this.state.currentQuestion.question}

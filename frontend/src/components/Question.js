@@ -14,7 +14,7 @@ class Question extends Component {
   }
 
   render() {
-    const { question, answer, category, difficulty } = this.props;
+    const { question, answer, category, difficulty, getImage } = this.props;
     return (
       <div className='Question-holder'>
         <div className='Question'>{question}</div>
@@ -22,15 +22,15 @@ class Question extends Component {
           <img
             className='category'
             alt={`${category}`}
-            src={`${category}.svg`}
+            src={getImage(category)}
           />
           <div className='difficulty'>Difficulty: {difficulty}</div>
-          <img
+          {/* <img
             src='delete.png'
             alt='delete'
             className='delete'
             onClick={() => this.props.questionAction('DELETE')}
-          />
+          /> */}
         </div>
         <div
           className='show-answer button'
