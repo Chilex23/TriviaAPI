@@ -189,7 +189,7 @@ class QuestionView extends Component {
           <h2>Questions</h2>
           {this.state.loading ? (
             <div className="flex-center">
-              <Bars color="#00BFFF" height={80} width={80} />
+              <Bars color="#ffb703" height={80} width={80} />
             </div>
           ) : (
             this.state.questions.map((q, ind) => (

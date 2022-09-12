@@ -218,7 +218,7 @@ class QuizView extends Component {
       this.renderFinalScore()
     ) : this.state.showAnswer ? (
       this.renderCorrectAnswer()
-    ) : this.state.loading ? <div className='flex-center'><Bars color="#00BFFF" height={80} width={80} /></div> : (
+    ) : this.state.loading ? <div className='flex-center'><Bars color="#ffb703" height={80} width={80} /></div> : (
       <div className='quiz-play-holder'>
         <div className='quiz-question'>
           {this.state.currentQuestion.question}

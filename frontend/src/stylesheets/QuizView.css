@@ -17,14 +17,15 @@
 }
 
 .play-category:hover {
-    color: dodgerblue;
+    color: #ffb703;
+    cursor: pointer;
 }
 
 .button {
     font-size: 1.5rem;
     width: fit-content;
     margin-top: 10px;
-    background-color: dodgerblue;
+    background-color: #ffb703;
     color: white;
     padding: 1rem 2rem;
     align-self: center;
@@ -84,7 +85,7 @@ div.button {
     width: 100px;
     border: none;
     border-radius: 8px;
-    background-color: dodgerblue;
+    background-color: #ffb703;
     color: white;
     padding: 3px 5px;
     cursor: pointer;

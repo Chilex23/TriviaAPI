@@ -100,7 +100,7 @@ span.page-num {
 }
 
 span.page-num.active {
-  color: blue;
+  color: #ffb703;
 }
 
 img.category {
