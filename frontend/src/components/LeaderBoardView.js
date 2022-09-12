@@ -21,7 +21,7 @@ class LeaderboardView extends Component {
 
 	getResults = () => {
 		$.ajax({
-			url: `https://general-trivia-api.herokuapp.com/leaderboard?page=${this.state.page}`,
+			url: `/leaderboard?page=${this.state.page}`,
 			type: "GET",
 			success: (result) => {
 				this.setState({

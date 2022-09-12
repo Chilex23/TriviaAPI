@@ -3,11 +3,12 @@
     margin-left: 10%;
     text-align: center;
     margin-top: 40px;
+    font-size: 1.6rem;
 }
 
 .category-holder {
     margin-top: 16px;
-    font-size: 24px;
+    font-size: 2rem;
 }
 
 .choose-header {
@@ -20,37 +21,45 @@
 }
 
 .button {
-    width: 100px;
-    margin-top: 5px;
+    font-size: 1.5rem;
+    width: fit-content;
+    margin-top: 10px;
     background-color: dodgerblue;
     color: white;
-    padding: 3px 5px;
+    padding: 1rem 2rem;
     align-self: center;
+    border: none;
+    border-radius: 8px;
+    text-transform: uppercase;
+    cursor: pointer;
 }
 
 div.button {
-    margin-top: 20px;
-    margin-left: calc(50% - 50px);
+    margin: 2rem auto;
 }
 
 .quiz-question {
     margin: 12px;
-    font-size: 24px;
+    font-size: 2.2rem;
 }
 
 .correct {
     color: green;
+    font-size: 1.6rem;
+    margin: 1rem 0;
 }
 
 .wrong {
     color: red;
+    font-size: 1.6rem;
+    margin: 1rem 0;
 }
 
 .player-name-holder {
-    margin-top: 20px;
-    font-size: 24px;
+    margin-top: 2rem;
+    font-size: 2rem;
     border: 2px solid black;
-    padding: 20px;
+    padding: 2rem;
 }
 
 .player-name-input {
@@ -62,14 +71,19 @@ div.button {
 
 #player-name {
     outline: none;
-    height: 30px;
-    font-size: 16px;
+    height: 4.5rem;
+    padding: 0 .5rem;
+    border-radius: 8px;
+    border: 2px solid black;
+    font-size: 1.6rem;
 }
 
 .player-btn {
+    font-size: 1.6rem;
     text-transform: uppercase;
     width: 100px;
     border: none;
+    border-radius: 8px;
     background-color: dodgerblue;
     color: white;
     padding: 3px 5px;

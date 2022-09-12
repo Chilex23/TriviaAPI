@@ -3,14 +3,17 @@
   color: white;
   display: flex;
   justify-content: space-between;
-  height: 75px;
-  padding: 20px;
+  align-items: center;
+  height: fit-content;
+  padding: 2rem;
   padding-right: 40%;
   padding-left: 5%;
+  gap: 1rem;
 }
 
 .App-header > h1 {
   color: dodgerblue;
+  font-size: 2.4rem;
 }
 
 .App-intro {
@@ -19,6 +22,7 @@
 
 h2 {
   text-align: center;
+  font-size: 2rem;
 }
 
 li {
@@ -43,4 +47,11 @@ form {
   justify-content: center;
   align-items: center;
   margin-top: 30px;
+}
+
+/* 450px */
+@media only screen and (max-width: 28.125em) {
+  .App-header {
+    flex-direction: column;
+  }
 }

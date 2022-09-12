@@ -1,7 +1,35 @@
+.form-view {
+  width: 50%;
+}
 .form-view > label {
-  padding: 0px 0px 10px;
+  padding: 0px 0px 1rem;
+}
+
+.add-select {
+  height: 3.5rem;
+  margin-left: 1rem;
+}
+
+.add-input {
+  height: 4rem;
+  width: 100%;
+  margin: .5rem 0;
+  border: 2px solid black;
 }
 
 #add-form {
   text-align: center;
+  margin: 3rem;
+  font-size: 1.6rem;
+}
+
+#add-form h2 {
+  font-size: 2.4rem;
+  margin: 1rem 0;
+}
+
+@media only screen and (max-width: 56.25em) {
+  .form-view {
+    width: 90%;
+  }
 }

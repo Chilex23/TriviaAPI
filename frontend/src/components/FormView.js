@@ -16,7 +16,7 @@ class FormView extends Component {
 
   componentDidMount() {
     $.ajax({
-      url: `https://general-trivia-api.herokuapp.com/categories`, //TODO: update request URL
+      url: `/categories`, //TODO: update request URL
       type: 'GET',
       success: (result) => {
         this.setState({ categories: result.categories });
@@ -69,15 +69,15 @@ class FormView extends Component {
         >
           <label>
             Question
-            <input type='text' name='question' onChange={this.handleChange} />
+            <input className='add-input' type='text' name='question' onChange={this.handleChange} />
           </label>
           <label>
             Answer
-            <input type='text' name='answer' onChange={this.handleChange} />
+            <input className='add-input' type='text' name='answer' onChange={this.handleChange} />
           </label>
           <label>
             Difficulty
-            <select name='difficulty' onChange={this.handleChange}>
+            <select className='add-select' name='difficulty' onChange={this.handleChange}>
               <option value='1'>1</option>
               <option value='2'>2</option>
               <option value='3'>3</option>
@@ -87,7 +87,7 @@ class FormView extends Component {
           </label>
           <label>
             Category
-            <select name='category' onChange={this.handleChange}>
+            <select className='add-select' name='category' onChange={this.handleChange}>
               {this.state.categories.map(category => {
                   return (
                     <option key={category.id} value={category.id}>

@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import '../stylesheets/App.css';
-import Question from './Question';
-import Search from './Search';
-import $ from 'jquery';
-import { Bars } from 'react-loader-spinner';
-import art from '../assets/art.svg';
-import science from '../assets/science.svg';
-import sports from '../assets/sports.svg';
-import geography from '../assets/geography.svg';
-import history from '../assets/history.svg';
-import entertainment from '../assets/entertainment.svg';
+import React, { Component } from "react";
+import "../stylesheets/App.css";
+import Question from "./Question";
+import Search from "./Search";
+import $ from "jquery";
+import { Bars } from "react-loader-spinner";
+import art from "../assets/art.svg";
+import science from "../assets/science.svg";
+import sports from "../assets/sports.svg";
+import geography from "../assets/geography.svg";
+import history from "../assets/history.svg";
+import entertainment from "../assets/entertainment.svg";
 
 class QuestionView extends Component {
   constructor() {
@@ -30,8 +30,8 @@ class QuestionView extends Component {
 
   getQuestions = () => {
     $.ajax({
-      url: `https://general-trivia-api.herokuapp.com/questions?page=${this.state.page}`, //TODO: update request URL
-      type: 'GET',
+      url: `/questions?page=${this.state.page}`, //TODO: update request URL
+      type: "GET",
       success: (result) => {
         this.setState({
           questions: result.questions,
@@ -43,13 +43,14 @@ class QuestionView extends Component {
         return;
       },
       error: (error) => {
-        alert('Unable to load questions. Please try your request again');
+        alert("Unable to load questions. Please try your request again");
         return;
       },
     });
   };
 
   selectPage(num) {
+    window.scrollTo(0, 10);
     this.setState({ page: num }, () => this.getQuestions());
   }
 
@@ -60,7 +61,7 @@ class QuestionView extends Component {
       pageNumbers.push(
         <span
           key={i}
-          className={`page-num ${i === this.state.page ? 'active' : ''}`}
+          className={`page-num ${i === this.state.page ? "active" : ""}`}
           onClick={() => {
             this.selectPage(i);
           }}
@@ -74,8 +75,8 @@ class QuestionView extends Component {
 
   getByCategory = (id) => {
     $.ajax({
-      url: `https://general-trivia-api.herokuapp.com/categories/${id}/questions`, //TODO: update request URL
-      type: 'GET',
+      url: `/categories/${id}/questions`, //TODO: update request URL
+      type: "GET",
       success: (result) => {
         this.setState({
           questions: result.questions,
@@ -86,7 +87,7 @@ class QuestionView extends Component {
         return;
       },
       error: (error) => {
-        alert('Unable to load questions. Please try your request again');
+        alert("Unable to load questions. Please try your request again");
         return;
       },
     });
@@ -94,10 +95,10 @@ class QuestionView extends Component {
 
   submitSearch = (searchTerm) => {
     $.ajax({
-      url: `https://general-trivia-api.herokuapp.com/questions`, //TODO: update request URL
-      type: 'POST',
-      dataType: 'json',
-      contentType: 'application/json',
+      url: `/questions`, //TODO: update request URL
+      type: "POST",
+      dataType: "json",
+      contentType: "application/json",
       data: JSON.stringify({ searchTerm: searchTerm }),
       crossDomain: true,
       success: (result) => {
@@ -110,23 +111,23 @@ class QuestionView extends Component {
         return;
       },
       error: (error) => {
-        alert('Unable to load questions. Please try your request again');
+        alert("Unable to load questions. Please try your request again");
         return;
       },
     });
   };
 
   questionAction = (id) => (action) => {
-    if (action === 'DELETE') {
-      if (window.confirm('are you sure you want to delete the question?')) {
+    if (action === "DELETE") {
+      if (window.confirm("are you sure you want to delete the question?")) {
         $.ajax({
-          url: `https://general-trivia-api.herokuapp.com/questions/${id}`, //TODO: update request URL
-          type: 'DELETE',
+          url: `/questions/${id}`, //TODO: update request URL
+          type: "DELETE",
           success: (result) => {
             this.getQuestions();
           },
           error: (error) => {
-            alert('Unable to load questions. Please try your request again');
+            alert("Unable to load questions. Please try your request again");
             return;
           },
         });
@@ -136,27 +137,27 @@ class QuestionView extends Component {
 
   getImage = (category) => {
     switch (category) {
-      case 'Art':
+      case "Art":
         return art;
-      case 'Entertainment':
+      case "Entertainment":
         return entertainment;
-      case 'Geography':
+      case "Geography":
         return geography;
-      case 'History':
+      case "History":
         return history;
-      case 'Science':
+      case "Science":
         return science;
-      case 'Sports':
+      case "Sports":
         return sports;
       default:
         return null;
+    }
   };
-};
 
   render() {
     return (
-      <div className='question-view'>
-        <div className='categories-list'>
+      <div className="question-view">
+        <div className="categories-list">
           <h2
             onClick={() => {
               this.getQuestions();
@@ -164,9 +165,10 @@ class QuestionView extends Component {
           >
             Categories
           </h2>
-          <ul style={{width: '80%', margin: '0 auto'}}>
-            {this.state.categories.map(category => (
+          <ul className="question-category">
+            {this.state.categories.map((category) => (
               <li
+                className="category-item"
                 key={category.id}
                 onClick={() => {
                   this.getByCategory(category.id);
@@ -174,7 +176,7 @@ class QuestionView extends Component {
               >
                 {category.type}
                 <img
-                  className='category'
+                  className="category"
                   alt={`${category.type}`}
                   src={this.getImage(category.type)}
                 />
@@ -183,23 +185,31 @@ class QuestionView extends Component {
           </ul>
           <Search submitSearch={this.submitSearch} />
         </div>
-        <div className='questions-list'>
+        <div className="questions-list">
           <h2>Questions</h2>
-         {this.state.loading ? <div className='flex-center'><Bars color="#00BFFF" height={80} width={80} /></div> : this.state.questions.map((q, ind) => (
-            <Question
-              key={q.id}
-              question={q.question}
-              answer={q.answer}
-              category={
-                this.state.categories.filter(c => c.id === Number(q.category))[0].type
-              }
-              difficulty={q.difficulty}
-              questionAction={this.questionAction(q.id)}
-              getImage={this.getImage}
-            />
-          ))}
+          {this.state.loading ? (
+            <div className="flex-center">
+              <Bars color="#00BFFF" height={80} width={80} />
+            </div>
+          ) : (
+            this.state.questions.map((q, ind) => (
+              <Question
+                key={q.id}
+                question={q.question}
+                answer={q.answer}
+                category={
+                  this.state.categories.filter(
+                    (c) => c.id === Number(q.category)
+                  )[0].type
+                }
+                difficulty={q.difficulty}
+                questionAction={this.questionAction(q.id)}
+                getImage={this.getImage}
+              />
+            ))
+          )}
 
-          <div className='pagination-menu'>{this.createPagination()}</div>
+          <div className="pagination-menu">{this.createPagination()}</div>
         </div>
       </div>
     );
