@@ -34,6 +34,11 @@
     border-radius: 8px;
     text-transform: uppercase;
     cursor: pointer;
+    transition: all .2s ease-in;
+}
+
+.button:hover {
+    transform: translateY(-5px) scale(1.1);
 }
 
 div.button {
