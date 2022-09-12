@@ -42,6 +42,7 @@
   border: 2px solid black;
   font-size: 1.6rem;
   padding: .5rem;
+  font-family: 'Inconsolata', monospace;
 }
 
 .questions-list {

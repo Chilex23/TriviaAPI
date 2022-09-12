@@ -66,7 +66,7 @@ class LeaderboardView extends Component {
 	render() {
 		return (
 			<div className="leaderboard-view">
-				{this.state.loading ? <div className='flex-center'><Bars color="#00BFFF" height={80} width={80} /></div> : this.state.results.length ? (
+				{this.state.loading ? <div className='flex-center'><Bars color="#ffb703" height={80} width={80} /></div> : this.state.results.length ? (
 					<>
 					<h1>Leaderboard</h1>
 					<table>

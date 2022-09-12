@@ -22,7 +22,8 @@
 }
 
 .button {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+    font-family: 'Inconsolata', monospace;
     width: fit-content;
     margin-top: 10px;
     background-color: #ffb703;
@@ -77,10 +78,12 @@ div.button {
     border-radius: 8px;
     border: 2px solid black;
     font-size: 1.6rem;
+    font-family: 'Inconsolata', monospace;
 }
 
 .player-btn {
     font-size: 1.6rem;
+    font-family: 'Inconsolata', monospace;
     text-transform: uppercase;
     width: 100px;
     border: none;
